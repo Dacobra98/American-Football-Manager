@@ -4,16 +4,18 @@ from listsforgenerating import first_names, last_names
 
 # Create the player class
 class Player:
-    def __init__(self, name, team, position, age, salary):
+    def __init__(self, name, team, position, ovr):
         # setting up different player ideas
         self.name = name
         self.team = team
         self.position = position
-        self.age = age
-        self.salary = salary
+        self.ovr = ovr
 
-# List to have all players
-players = []
+# List to have all players for Team 1
+Team1Players = []  # Total Rosters
+Team1Sort = [] # So that we can sort the players into a proper depth chart
+Team2Players = []  # Total Rosters
+Team2Sort = []
 
 
 # Setting a function to start the game 
@@ -27,11 +29,26 @@ def generate_playerstartgame():
         Generaterandomlastname = random.randint(0, 20)
         # Combining first and last names
         name = first_names[Generaterandomfirstname] + ' ' + last_names[Generaterandomlastname]
-    
+          # We need to generate both teams however so we will check if 52 players have been generated and then change team
+        if generatedplayer <= 52 and team2swap == False : # it will equal 52 when it generates last player for the first team
+            team = "Team 1"   
+        elif generatedplayer == 53 and team2swap == False: # So we can reset generated player
+            team = "Team 2"
+            team2swap = True
+            generatedplayer = 1
+        else: 
+            team = "Team 2"
+
+        # Next we are going to generate a rating for the players so that the games arent just a 50/50
+        ovr = random.randint(30,99)
+        
+     
+        
+       
         # We want to generate enough players in each position for the team 
-        if generatedplayer <= 7:
+        if generatedplayer  <= 7:
             position = "WR"
-        elif generatedplayer <= 10:
+        elif generatedplayer <= 10: 
             position = "RB"
         elif generatedplayer <= 13:
             position = "QB"
@@ -51,27 +68,28 @@ def generate_playerstartgame():
             position = "DT"
         elif generatedplayer <= 52:
             position = "S"
-        # We need to generate both teams however so we will check if 52 players have been generated and then change team
-        if generatedplayer <= 52 and team2swap == False : # it will equal 52 when it generates last player for the first team
-            team = "Team 1"
-            
-        elif generatedplayer == 53 and team2swap == False: # So we can reset generated player
-            team = "Team 2"
-            team2swap = True
-            generatedplayer = 1
-        else: 
-            team = "Team 2"
 
-            
-        age = 22
-        salary = generatedplayer
-        
-        #Running it through player instance and appending to the list
-        player = Player(name, team, position, age, salary)
-        players.append(player)
+        player = Player(name,team,position,ovr)
+        if team2swap == False:
+            Team1Players.append(player)
+        else:
+            Team2Players.append(player)
+      
+
+def sort_and_print_players(team_players):
+    sorted_players = sorted(team_players, key=lambda x: (x.position, -x.ovr))
+    current_position = ""
+    for player in sorted_players:
+        if player.position != current_position:
+            current_position = player.position
+            print("\nPosition: " + player.position + " ")
+        print("Name: " + player.name + " OVR: " + str(player.ovr))
+
 
 generate_playerstartgame()
-# Printing player details
-for player in players:
-       
-    print("Name:", player.name, "Team:", player.team, "Position:", player.position,"Age:", player.age,"Salary: $", player.salary)
+
+print("Team 1 Players Sorted by Position and OVR:")
+sort_and_print_players(Team1Players)
+
+print("\nTeam 2 Players Sorted by Position and OVR:")
+sort_and_print_players(Team2Players)
