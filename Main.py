@@ -41,7 +41,7 @@ def generate_playerstartgame():
 
         # Next we are going to generate a rating for the players so that the games arent just a 50/50
         ovr = random.randint(30,99)
-        
+
         # We want to generate enough players in each position for the team 
         if generatedplayer  <= 7:
             position = "WR"
@@ -72,7 +72,9 @@ def generate_playerstartgame():
         else:
             Team2Players.append(player)
       
+
 # Creating the function to sort the players into depth chart, and print the info to the user
+
 def sort_and_print_players(team_players):
     sorted_players = sorted(team_players, key=lambda x: (x.position, -x.ovr))
     current_position = ""
@@ -81,6 +83,7 @@ def sort_and_print_players(team_players):
             current_position = player.position
             print("\nPosition: " + player.position + " ")
         print("Name: " + player.name + " OVR: " + str(player.ovr))
+
    
 
 
@@ -159,3 +162,14 @@ while userchoice != 99: # user is unlikely to type 99, and therfore if the user 
     else:
         print("ERROR! please put a correct input this time.")
     
+
+
+
+generate_playerstartgame()
+
+print("Team 1 Players Sorted by Position and OVR:")
+sort_and_print_players(Team1Players)
+
+print("\nTeam 2 Players Sorted by Position and OVR:")
+sort_and_print_players(Team2Players)
+
