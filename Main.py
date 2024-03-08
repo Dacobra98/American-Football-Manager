@@ -79,11 +79,8 @@ def sort_and_print_players(team_players):
     for player in sorted_players:
         if player.position != current_position:
             current_position = player.position
-            print("\nPosition: " + player.position + " ")
-        print("Name: " + player.name + " OVR: " + str(player.ovr))
-   
-
-
+    return sorted_players
+            
 
     
 ##################################
@@ -92,6 +89,8 @@ def sort_and_print_players(team_players):
 # Setting variables for the game 
 yardline = 0 # Determines the yard line the ball is on
 playerside = ''# We will set what side of the ball the player is on too this 
+team1returner = []  # Saving the returners within these lists
+team2returner = []        
 
 # All functions now on will create the important functions within the game.
 def yards(type,gained):# this will be used so that we cant print where the ball is 
@@ -99,51 +98,50 @@ def yards(type,gained):# this will be used so that we cant print where the ball 
         # This means the first 50 yards is their yards the last 50 is yours
         if yardline + gained > 50:
             output = 100 - (yardline + gained)
-            print("The ball is on your",output," yard line")
+            print("The ball is on your",output," ard line")
         else:
             output = yardline + gained
-            print("The ball is on their",output," yard line")
+            print("The ball is on their",output,"yard line")
     else:
         # This means the first 50 yards is their yards the last 50 is yours
         if yardline + gained > 50:
             output = 100 - (yardline + gained)
-            print("The ball is on their",output," yard line")
+            print("The ball is on their",output,"yard line")
         else:
             output = yardline + gained
-            print("The ball is on your",output," yard line")
+            print("The ball is on your",output,"yard line")
 
 # This function will take place when the user kicks the ball
 def kickingfunction():
    # We want this function to be weighted, so we will generate a random number for the output
     output = random.randint(0,200) # a 50% chance for a touch back, and then a one percent chance for every yard if we already know that it is not a touchback
     if output <= 100:
-        print("\nTouchback!")
-        yardline = 0
+        print("\n", team2returner.name, "has elected to take a touchback:")
         output = 25 # needs to be 25 so the yard function can properly add it
+        yardline = 0
         yards(playerside,output)
     elif output == 200: # This means that it is a touchdown
-        print("\nTouchdown!")
+        print({team2returner.name},"Has scored a touchdown on the kick off!")
     else: # this means it is not a touch back 
         # it needs to be formated, this is doen by removing the 100 for a touchback
         output -= 100
-        print("\nhas returned it for", output, "yards!")
+        print("\n", team2returner.name, "has returned it for", output, "yards!")
         yards(playerside,output)
-
 # This function will take place when the user recives the ball 
 def recivingfunction():
      # We want this function to be weighted, so we will generate a random number for the output
     output = random.randint(1,200) # a 50% chance for a touch back, and then a one percent chance for every yard if we already know that it is not a touchback
     if output <= 100:
-        print("\nTouchback!")
+        print("\n", team1returner.name, "has elected to take a touchback:")
         output = 25 # needs to be 25 so the yard function can properly add it
         yardline = 0
         yards(playerside,output)
     elif output == 200: # This means that it is a touchdown
-        print("\nTouchdown!")
+        print({team1returner.name},"Has scored a touchdown on the kick off!")
     else: # this means it is not a touch back 
         # it needs to be formated, this is doen by removing the 100 for a touchback
         output -= 100
-        print("\nhas returned it for", output, "yards!")
+        print("\n", team1returner.name, "has returned it for", output, "yards!")
         yards(playerside,output)
     
 generate_playerstartgame()
@@ -155,22 +153,26 @@ while userchoice != 1:
     print("\nTutorial:")
     print("In order to select an option type the number associated with the option, showcased in the parentheses ex. (1) or (2)")
     print("\nWelcome to football coach! What Would you like to do?")
-    userchoice = int(input("Start the game and see the teams!(1)"))
+    userchoice = int(input("Start the game!(1)"))
     if userchoice == 1:
-        print("\nYour Players Sorted by Position and OVR:")
-        sort_and_print_players(Team1Players)
+        # Sorts the lists, and then saves it back under team 2 players to keep an accurate depth chart. 
+        Team1Players = sort_and_print_players(Team1Players)
+        
+    
     if userchoice == 1:
-        print("\nOpponents Players Sorted by Position and OVR:")
-        sort_and_print_players(Team2Players)
-        leavetheloop = input("Press any key when you are ready to leave this menu!") # Just to slow down the user so they have to make an input inorder to leave the sorting function
+        # Sorts the lists, and then saves it back under team 2 players to keep an accurate depth chart. 
+        Team2Players = sort_and_print_players(Team2Players)
+        
     else:
         print("ERROR! use a correct input next time!")
-        
-        
+
 userchoice = 0
 while userchoice != 99: # user is unlikely to type 99, and therfore if the user inputs a wrong input choice it will loop them through this gain
     print("\n\n\n\nWelcome to the game coach!")
     userchoice = int(input("Would you like to start the game by kicking(1) or receiving(2)"))
+    # Saving both returners on each team fo the rest of the game
+    team1returner = Team1Players[45]  # Access the best wr on the team
+    team2returner = Team2Players[45]  # Access the best wr on the second team 
     if userchoice == 1:
         # The user has kicked
         userchoice = 99
@@ -184,4 +186,5 @@ while userchoice != 99: # user is unlikely to type 99, and therfore if the user 
     else:
         print("ERROR! please put a correct input this time.")
 
-    
+gameisrunning = True
+while gameisrunning == True: # Have this function run while the game continues in order to, loop all functions of the game
